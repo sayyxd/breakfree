@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Break Free</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 24px 0;
+    }
+
+    .phone {
+      width: 100%;
+      max-width: 390px;
+      font-family: "DM Sans", Arial, sans-serif;
+      background: #fff;
+      border-radius: 40px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.10);
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+
+      .phone {
+        border-radius: 0;
+        min-height: 100vh;
+      }
+    }
+
+    .top-bar {
+      padding: 24px 22px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111;
+      letter-spacing: -0.3px;
+    }
+
+    .creator-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 16px 10px;
+    }
+
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      transition: transform 0.15s;
+    }
+
+    .icon-btn:active {
+      transform: scale(0.92);
+    }
+
+    .name-input {
+      flex: 1;
+      height: 44px;
+      border-radius: 14px;
+      border: 1.5px solid #ddd;
+      background: #f7f7f7;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: #111;
+      text-align: center;
+      padding: 0 10px;
+      outline: none;
+      min-width: 0;
+      transition: border-color 0.2s;
+      user-select: auto;
+    }
+
+    .name-input::placeholder {
+      color: #aaa;
+    }
+
+    .color-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid #ddd;
+      background: #f7f7f7;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .color-swatch {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+    }
+
+    .add-btn {
+      width: calc(100% - 32px);
+      margin: 0 16px 14px;
+      padding: 12px;
+      border-radius: 14px;
+      border: none;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    .add-btn:active {
+      opacity: 0.85;
+    }
+
+    .tabs {
+      display: flex;
+      padding: 0 16px;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      margin-bottom: 4px;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      padding: 7px 13px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1.5px solid transparent;
+      cursor: pointer;
+      white-space: nowrap;
+      font-family: "DM Sans", Arial, sans-serif;
+      transition: all 0.18s;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .swiper-wrap {
+      overflow: hidden;
+    }
+
+    .swiper-track {
+      display: flex;
+      transition: transform 0.36s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .slide {
+      min-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 22px 40px;
+    }
+
+    .empty-state {
+      min-width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 56px 22px;
+      gap: 10px;
+      color: #999;
+      font-size: 14px;
+    }
+
+    .empty-state span:first-child {
+      font-size: 36px;
+    }
+
+    .ring-btn {
+      position: relative;
+      width: 215px;
+      height: 215px;
+      border-radius: 50%;
+      background: transparent;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .ring-btn svg {
+      width: 215px;
+      height: 215px;
+      transform: rotate(-90deg);
+      display: block;
+    }
+
+    .ring-track {
+      fill: none;
+      stroke-width: 13;
+    }
+
+    .ring-fill {
+      fill: none;
+      stroke-width: 13;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.55s cubic-bezier(.4, 0, .2, 1);
+    }
+
+    .ring-inner {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .ring-emoji {
+      font-size: 28px;
+      line-height: 1;
+      margin-bottom: 2px;
+    }
+
+    .ring-number {
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .ring-label {
+      font-size: 12px;
+      color: #999;
+      margin-top: 5px;
+      font-weight: 500;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #bbb;
+      margin-top: 16px;
+      letter-spacing: 0.2px;
+    }
+
+    .relapse-link {
+      font-size: 12px;
+      color: #bbb;
+      cursor: pointer;
+      margin-top: 12px;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .nav-dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      padding: 14px 0 20px;
+    }
+
+    .nav-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #ddd;
+      transition: all 0.2s;
+    }
+
+    .nav-dot.active {
+      width: 18px;
+      border-radius: 3px;
+    }
+
+    .popup {
+      position: absolute;
+      z-index: 50;
+      background: #fff;
+      border: 0.5px solid #ddd;
+      border-radius: 18px;
+      padding: 14px;
+      display: none;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .popup.open {
+      display: block;
+    }
+
+    .emoji-popup-inner {
+      width: 236px;
+    }
+
+    .emoji-type-hint {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 7px;
+      line-height: 1.4;
+    }
+
+    .emoji-type-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .emoji-custom-input {
+      flex: 1;
+      height: 38px;
+      border-radius: 10px;
+      border: 1.5px solid #ddd;
+      background: #f7f7f7;
+      font-size: 22px;
+      text-align: center;
+      outline: none;
+      font-family: "DM Sans", Arial, sans-serif;
+      padding: 0 6px;
+      user-select: auto;
+    }
+
+    .emoji-use-btn {
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: none;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #fff;
+      white-space: nowrap;
+    }
+
+    .emoji-divider {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 8px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 4px;
+    }
+
+    .emoji-opt {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      border: none;
+      background: transparent;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.1s;
+    }
+
+    .emoji-opt:hover {
+      background: #f0f0f0;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7px;
+      width: 196px;
+    }
+
+    .color-opt {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2.5px solid transparent;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .color-opt:hover {
+      transform: scale(1.12);
+    }
+
+    .color-opt.selected {
+      border-color: #111;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #fff;
+      border-radius: 22px;
+      padding: 24px;
+      width: 100%;
+      max-width: 310px;
+    }
+
+    .modal-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #111;
+      margin-bottom: 6px;
+    }
+
+    .modal-body {
+      font-size: 13px;
+      color: #888;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .modal-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .modal-actions button {
+      padding: 12px;
+      border-radius: 13px;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid #ddd;
+      background: transparent;
+      color: #111;
+    }
+
+    .modal-confirm {
+      color: #fff !important;
+      border-color: transparent !important;
+    }
+
+    .toast-wrap {
+      min-height: 0;
+    }
+
+    .toast {
+      background: #111;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 22px;
+      font-size: 13px;
+      font-weight: 500;
+      text-align: center;
+      margin: 0 22px 18px;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <div class="phone" id="phone">
+    <div class="top-bar">
+      <span class="app-title">Break free</span>
+      <i class="ti ti-flame" style="font-size:21px;color:#bbb"></i>
+    </div>
+
+    <div class="creator-bar">
+      <button class="icon-btn" id="emoji-btn" onclick="toggleEmoji(event)">😤</button>
+      <input class="name-input" id="name-input" type="text" placeholder="your habit..." maxlength="18">
+      <div class="color-btn" id="color-btn" onclick="toggleColor(event)">
+        <div class="color-swatch" id="color-swatch" style="background:#E24B4A"></div>
+      </div>
+    </div>
+
+    <div id="emoji-popup" class="popup">
+      <div class="emoji-popup-inner">
+        <div class="emoji-type-hint">type or paste any emoji below</div>
+        <div class="emoji-type-row">
+          <input class="emoji-custom-input" id="emoji-custom-input" maxlength="4" placeholder="✍️">
+          <button class="emoji-use-btn" id="emoji-use-btn" onclick="useCustomEmoji()">Use</button>
+        </div>
+        <div class="emoji-divider">or pick one</div>
+        <div class="emoji-grid" id="emoji-grid"></div>
+      </div>
+    </div>
+
+    <div id="color-popup" class="popup">
+      <div class="color-grid" id="color-grid"></div>
+    </div>
+
+    <button class="add-btn" id="add-btn" onclick="addHabit()">+ Add habit</button>
+
+    <div class="tabs" id="tabs-row"></div>
+    <div class="swiper-wrap" id="swiper-wrap">
+      <div class="swiper-track" id="swiper-track"></div>
+    </div>
+    <div class="nav-dots" id="nav-dots"></div>
+
+    <div class="modal-overlay" id="modal-overlay">
+      <div class="modal-card">
+        <div class="modal-title">Reset streak?</div>
+        <div class="modal-body" id="modal-body">This resets your streak to 0.</div>
+        <div class="modal-actions">
+          <button onclick="closeModal()">Cancel</button>
+          <button class="modal-confirm" id="m-confirm" onclick="confirmRelapse()">Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-wrap">
+      <div class="toast" id="toast"></div>
+    </div>
+  </div>
+
+  <script>
+    const EMOJIS = ['😤', '🍷', '🚭', '💨', '🧠', '🌿', '🎰', '📱', '🍔', '☕', '🍺', '💊', '🎮', '🛒', '💸', '🍫', '😴', '🧁', '🥃', '🎲', '💪', '🔥', '🧨', '💀', '🕹️', '🏋️', '📺'];
+    const COLORS = [
+      { hex: '#E24B4A', track: '#F7C1C1' },
+      { hex: '#7F77DD', track: '#CECBF6' },
+      { hex: '#639922', track: '#C0DD97' },
+      { hex: '#BA7517', track: '#FAC775' },
+      { hex: '#7A5C3A', track: '#D9B99A' },
+      { hex: '#D4537E', track: '#F4C0D1' },
+      { hex: '#378ADD', track: '#B5D4F4' },
+      { hex: '#1D9E75', track: '#9FE1CB' },
+      { hex: '#888780', track: '#D3D1C7' },
+      { hex: '#D85A30', track: '#F5C4B3' }
+    ];
+    const MILESTONES = [3, 7, 14, 30, 60, 90];
+
+    function loadData() {
+      try {
+        return JSON.parse(localStorage.getItem('bf_v1') || 'null');
+      } catch {
+        return null;
+      }
+    }
+
+    function saveData() {
+      try {
+        localStorage.setItem('bf_v1', JSON.stringify({ habits, streaks }));
+      } catch {}
+    }
+
+    let saved = loadData();
+    let habits = Array.isArray(saved?.habits) ? saved.habits : [];
+    let streaks = saved?.streaks && typeof saved.streaks === 'object' ? saved.streaks : {};
+    let current = 0;
+    let pendingId = null;
+    let holdTimer = null;
+    let holding = false;
+    let suppressClick = false;
+    let selEmoji = '😤';
+    let selColorIdx = 0;
+
+    function escapeHTML(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function getS(id) {
+      if (!streaks[id]) {
+        streaks[id] = { streak: 0, best: 0, lastDate: null };
+      }
+
+      return streaks[id];
+    }
+
+    function today() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function yesterday() {
+      const d = new Date();
+      d.setDate(d.getDate() - 1);
+      return d.toISOString().slice(0, 10);
+    }
+
+    function nextMile(streak) {
+      for (const milestone of MILESTONES) {
+        if (milestone > streak) return milestone;
+      }
+
+      return MILESTONES[MILESTONES.length - 1] * 2;
+    }
+
+    function uid() {
+      return 'h' + Date.now();
+    }
+
+    function initEmojiGrid() {
+      document.getElementById('emoji-grid').innerHTML = EMOJIS.map((emoji) => (
+        `<button class="emoji-opt" onclick="pickEmoji('${emoji}')">${emoji}</button>`
+      )).join('');
+    }
+
+    function initColorGrid() {
+      document.getElementById('color-grid').innerHTML = COLORS.map((color, index) => (
+        `<div class="color-opt${index === selColorIdx ? ' selected' : ''}" style="background:${color.hex}" onclick="pickColor(${index})"></div>`
+      )).join('');
+    }
+
+    function positionPopup(popupId, refId) {
+      const popup = document.getElementById(popupId);
+      const ref = document.getElementById(refId);
+      const phone = document.getElementById('phone');
+      const phoneRect = phone.getBoundingClientRect();
+      const refRect = ref.getBoundingClientRect();
+
+      popup.style.top = (refRect.bottom - phoneRect.top + 6) + 'px';
+
+      if (popupId === 'emoji-popup') {
+        popup.style.left = '12px';
+        popup.style.right = 'auto';
+      } else {
+        popup.style.right = '12px';
+        popup.style.left = 'auto';
+      }
+    }
+
+    function toggleEmoji(event) {
+      event.stopPropagation();
+      initEmojiGrid();
+
+      const emojiPopup = document.getElementById('emoji-popup');
+      const colorPopup = document.getElementById('color-popup');
+      const isOpen = emojiPopup.classList.contains('open');
+
+      colorPopup.classList.remove('open');
+
+      if (isOpen) {
+        emojiPopup.classList.remove('open');
+      } else {
+        positionPopup('emoji-popup', 'emoji-btn');
+        emojiPopup.classList.add('open');
+      }
+    }
+
+    function toggleColor(event) {
+      event.stopPropagation();
+      initColorGrid();
+
+      const emojiPopup = document.getElementById('emoji-popup');
+      const colorPopup = document.getElementById('color-popup');
+      const isOpen = colorPopup.classList.contains('open');
+
+      emojiPopup.classList.remove('open');
+
+      if (isOpen) {
+        colorPopup.classList.remove('open');
+      } else {
+        positionPopup('color-popup', 'color-btn');
+        colorPopup.classList.add('open');
+      }
+    }
+
+    function pickEmoji(emoji) {
+      selEmoji = emoji;
+      document.getElementById('emoji-btn').textContent = emoji;
+      document.getElementById('emoji-popup').classList.remove('open');
+    }
+
+    function useCustomEmoji() {
+      const value = document.getElementById('emoji-custom-input').value.trim();
+      if (!value) return;
+
+      const emoji = [...value][0];
+
+      if (emoji) {
+        pickEmoji(emoji);
+        document.getElementById('emoji-custom-input').value = '';
+      }
+    }
+
+    document.getElementById('emoji-custom-input').addEventListener('keydown', function(event) {
+      if (event.key === 'Enter') useCustomEmoji();
+    });
+
+    function pickColor(index) {
+      selColorIdx = index;
+      document.getElementById('color-swatch').style.background = COLORS[index].hex;
+      document.getElementById('add-btn').style.background = COLORS[index].hex;
+      document.getElementById('name-input').style.borderColor = COLORS[index].hex;
+      document.getElementById('emoji-use-btn').style.background = COLORS[index].hex;
+      initColorGrid();
+    }
+
+    document.addEventListener('click', () => {
+      document.getElementById('emoji-popup').classList.remove('open');
+      document.getElementById('color-popup').classList.remove('open');
+    });
+
+    document.getElementById('emoji-popup').addEventListener('click', (event) => event.stopPropagation());
+    document.getElementById('color-popup').addEventListener('click', (event) => event.stopPropagation());
+
+    function addHabit() {
+      const name = document.getElementById('name-input').value.trim();
+
+      if (!name) {
+        showToast('Give it a name first');
+        return;
+      }
+
+      habits.push({
+        id: uid(),
+        name,
+        emoji: selEmoji,
+        colorIdx: selColorIdx
+      });
+
+      saveData();
+      current = habits.length - 1;
+      document.getElementById('name-input').value = '';
+      render();
+      showToast(selEmoji + ' ' + name + ' added');
+    }
+
+    function buildSlide(habit) {
+      const streakData = getS(habit.id);
+      const color = COLORS[habit.colorIdx] || COLORS[0];
+      const next = nextMile(streakData.streak);
+      const radius = 94;
+      const circumference = 2 * Math.PI * radius;
+      const offset = circumference * (1 - Math.min(streakData.streak / next, 1));
+      const displayNumber = streakData.streak > 0 ? streakData.streak : 1;
+      const displayLabel = streakData.streak === 1 ? 'day clean' : 'days clean';
+      const safeId = escapeHTML(habit.id);
+
+      return `<div class="slide">
+        <button class="ring-btn"
+          onmousedown="holdStart('${safeId}')"
+          onmouseup="holdEnd('${safeId}')"
+          onmouseleave="holdEnd('${safeId}')"
+          ontouchstart="holdStart('${safeId}')"
+          ontouchend="holdEnd('${safeId}')"
+          ontouchcancel="holdEnd('${safeId}')"
+          onclick="checkIn('${safeId}')">
+          <svg viewBox="0 0 215 215">
+            <circle class="ring-track" cx="107.5" cy="107.5" r="${radius}" stroke="${color.track}"></circle>
+            <circle class="ring-fill" id="rfill-${safeId}" cx="107.5" cy="107.5" r="${radius}"
+              stroke="${color.hex}" stroke-dasharray="${circumference}" stroke-dashoffset="${offset}"></circle>
+          </svg>
+          <div class="ring-inner">
+            <span class="ring-emoji">${escapeHTML(habit.emoji)}</span>
+            <span class="ring-number" id="rnum-${safeId}" style="color:${color.hex}">${displayNumber}</span>
+            <span class="ring-label" id="rlbl-${safeId}">${displayLabel}</span>
+          </div>
+        </button>
+        <div class="hint">tap to check in</div>
+        <div class="relapse-link" onclick="relapseClick('${safeId}')">I slipped</div>
+      </div>`;
+    }
+
+    function buildTabs() {
+      document.getElementById('tabs-row').innerHTML = habits.map((habit, index) => {
+        const color = COLORS[habit.colorIdx] || COLORS[0];
+        const active = index === current;
+
+        return `<div class="tab" onclick="goTo(${index})" style="background:${active ? color.hex : 'transparent'};border-color:${active ? color.hex : color.track};color:${active ? '#fff' : color.hex}">
+          <span>${escapeHTML(habit.emoji)}</span>
+          <span>${escapeHTML(habit.name)}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function buildDots() {
+      document.getElementById('nav-dots').innerHTML = habits.map((habit, index) => {
+        const color = COLORS[habit.colorIdx] || COLORS[0];
+        return `<div class="nav-dot${index === current ? ' active' : ''}" style="${index === current ? 'background:' + color.hex : ''}"></div>`;
+      }).join('');
+    }
+
+    function render() {
+      if (!habits.length) {
+        document.getElementById('swiper-track').innerHTML = '<div class="empty-state"><span>🙌</span><span>Add your first habit above</span></div>';
+        document.getElementById('tabs-row').innerHTML = '';
+        document.getElementById('nav-dots').innerHTML = '';
+        return;
+      }
+
+      if (current >= habits.length) current = habits.length - 1;
+
+      document.getElementById('swiper-track').innerHTML = habits.map((habit) => buildSlide(habit)).join('');
+      document.getElementById('swiper-track').style.transform = `translateX(-${current * 100}%)`;
+      buildTabs();
+      buildDots();
+    }
+
+    function goTo(index) {
+      current = index;
+      document.getElementById('swiper-track').style.transform = `translateX(-${current * 100}%)`;
+      buildTabs();
+      buildDots();
+    }
+
+    function checkIn(id) {
+      if (holding || suppressClick) {
+        suppressClick = false;
+        return;
+      }
+
+      const streakData = getS(id);
+      const todayDate = today();
+
+      if (streakData.lastDate === todayDate) {
+        showToast('Already in for today');
+        return;
+      }
+
+      streakData.streak = streakData.lastDate === yesterday() ? streakData.streak + 1 : 1;
+      streakData.lastDate = todayDate;
+
+      if (streakData.streak > streakData.best) streakData.best = streakData.streak;
+
+      streaks[id] = streakData;
+      saveData();
+      render();
+      showToast(MILESTONES.includes(streakData.streak) ? streakData.streak + '-day milestone!' : 'Day ' + streakData.streak + ' locked in');
+    }
+
+    function holdStart(id) {
+      holding = false;
+      clearTimeout(holdTimer);
+
+      holdTimer = setTimeout(() => {
+        holding = true;
+        suppressClick = true;
+
+        const streakData = getS(id);
+        const number = document.getElementById('rnum-' + id);
+        const label = document.getElementById('rlbl-' + id);
+
+        if (number) number.textContent = streakData.streak;
+        if (label) label.textContent = 'day' + (streakData.streak !== 1 ? 's' : '') + ' clean';
+      }, 380);
+    }
+
+    function holdEnd(id) {
+      clearTimeout(holdTimer);
+
+      if (holding) {
+        holding = false;
+
+        setTimeout(() => {
+          const streakData = getS(id);
+          const number = document.getElementById('rnum-' + id);
+          const label = document.getElementById('rlbl-' + id);
+
+          if (number) number.textContent = streakData.streak > 0 ? streakData.streak : 1;
+          if (label) label.textContent = streakData.streak === 1 ? 'day clean' : 'days clean';
+        }, 700);
+      }
+    }
+
+    function relapseClick(id) {
+      pendingId = id;
+
+      const habit = habits.find((item) => item.id === id);
+      if (!habit) return;
+
+      const color = COLORS[habit.colorIdx] || COLORS[0];
+
+      document.getElementById('modal-body').textContent = 'Reset your ' + habit.name + ' streak to 0? Recovery is part of the journey.';
+      document.getElementById('m-confirm').style.background = color.hex;
+      document.getElementById('modal-overlay').classList.add('open');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      pendingId = null;
+    }
+
+    function confirmRelapse() {
+      if (!pendingId) return;
+
+      const streakData = getS(pendingId);
+      streakData.streak = 0;
+      streakData.lastDate = null;
+      streaks[pendingId] = streakData;
+
+      saveData();
+      closeModal();
+      render();
+      showToast('Reset. Day 1 starts now.');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2400);
+    }
+
+    let touchX = 0;
+    let touchY = 0;
+    const swiper = document.getElementById('swiper-wrap');
+
+    swiper.addEventListener('touchstart', (event) => {
+      touchX = event.touches[0].clientX;
+      touchY = event.touches[0].clientY;
+    }, { passive: true });
+
+    swiper.addEventListener('touchend', (event) => {
+      const dx = event.changedTouches[0].clientX - touchX;
+      const dy = event.changedTouches[0].clientY - touchY;
+
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 44) {
+        if (dx < 0 && current < habits.length - 1) {
+          goTo(current + 1);
+        } else if (dx > 0 && current > 0) {
+          goTo(current - 1);
+        }
+      }
+    }, { passive: true });
+
+    document.getElementById('modal-overlay').addEventListener('click', function(event) {
+      if (event.target === this) closeModal();
+    });
+
+    pickColor(selColorIdx);
+    render();
+  </script>
+</body>
+</html>
